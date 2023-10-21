@@ -1,0 +1,24 @@
+  name: ADL
+  channels:
+    - defaults
+    - pytorch
+    - conda-forge
+  dependencies:
+    - python=3.9
+    - tqdm
+    - numpy
+    - pandas
+    - matplotlib
+    - pytorch==1.12.1 
+    - torchvision==0.13.1 
+    - torchaudio==0.12.1
+    - cudatoolkit=10.2
+    - pip
+    - pip:
+        - scikit-learn==1.1.2
+        - nltk==3.7
+        - transformers==4.22.2
+        - datasets==2.5.2
+        - accelerate==0.13.0
+        - evaluate
+        - ipdb
