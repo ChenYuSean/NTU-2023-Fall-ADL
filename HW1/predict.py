@@ -364,7 +364,7 @@ def postprocess_qa_predictions(
 def main(str_args = None):
     args = parse_args(str_args)
     global CONTEXT_FILE
-    with open(ROOT_PATH + 'context.json', encoding='utf-8') as f:
+    with open(args.context_file, encoding='utf-8') as f:
         CONTEXT_FILE = json.load(f)
     # # initialize accelerator
     accelerator = Accelerator(gradient_accumulation_steps=2)
@@ -643,7 +643,7 @@ def main(str_args = None):
     # Output
     ### TODO: output csv
     # ipdb.set_trace()
-    with open('./prediction.csv', "w",  errors='ignore', encoding='utf-8') as file:
+    with open(args.output_path, "w",  errors='ignore', encoding='utf-8') as file:
         header = ["id","answer"]
         writer = csv.writer(file)
         writer.writerow(header)
