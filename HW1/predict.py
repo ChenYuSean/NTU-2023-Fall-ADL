@@ -18,7 +18,7 @@
 Fine-tuning a 🤗 Transformers model on multiple choice relying on the accelerate library without using a Trainer.
 """
 # You can also adapt this script on your own multiple choice task. Pointers for this are left as comments.
-import ipdb
+# import ipdb
 import argparse
 import json
 import csv
@@ -61,10 +61,24 @@ from transformers import (
 from transformers.utils import PaddingStrategy
 
 # %%
+# Global Variable
+ROOT_PATH = './'
+PS_PATH = "./output_PS/"
+QA_PATH = "./output_QA/"
+MODEL_NAME = "pytorch_model.bin"
+CONFIG_NAME = 'config.json'
+CONTEXT_FILE = None
+
+str_args = None
+
+# %%
 def parse_args(str_args = None):
     parser = argparse.ArgumentParser(description="Predict answer with trained models")
     parser.add_argument(
         "--test_file", type=str, default=None, help="A csv or a json file containing the predict data."
+    )
+    parser.add_argument(
+        "--context_file", type=str, default=None, help="context file"
     )
     parser.add_argument(
         "--output_path", type=str, default=None, help="Where to store the final model."
@@ -298,6 +312,7 @@ def postprocess_qa_predictions(
 
         # Use the offsets to gather the answer text in the original context.
         #### TODO: Change to context file
+        global CONTEXT_FILE
         context = CONTEXT_FILE[example["relevant"]]
         for pred in predictions:
             offsets = pred.pop("offsets")
@@ -346,18 +361,11 @@ def postprocess_qa_predictions(
 
 
 # %%
-# Global Variable
-ROOT_PATH = './'
-PS_PATH = "./output_PS/"
-QA_PATH = "./output_QA/"
-MODEL_NAME = "pytorch_model.bin"
-CONFIG_NAME = 'config.json'
-
-with open(ROOT_PATH + 'context.json', encoding='utf-8') as f:
-    CONTEXT_FILE = json.load(f)
-
-def main(str_args):
+def main(str_args = None):
     args = parse_args(str_args)
+    global CONTEXT_FILE
+    with open(ROOT_PATH + 'context.json', encoding='utf-8') as f:
+        CONTEXT_FILE = json.load(f)
     # # initialize accelerator
     accelerator = Accelerator(gradient_accumulation_steps=2)
     device = accelerator.device
@@ -645,17 +653,6 @@ def main(str_args):
 
 # %%
 if __name__ == "__main__":
-    str_args = None
-    # manual args, comment out if running in terminal
-    str_args = [
-        "--test_file", "./test.json",
-        "--per_device_batch_size", "8",
-        "--max_seq_length","512",
-        "--n_best_size","20",
-        "--doc_stride", "32",
-        "--output_path", "./prediction.csv"
-    ]
     main(str_args)
-
 
 
