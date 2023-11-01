@@ -1,3 +1,5 @@
+output/
+OUTPUTS/
 *.pdf
 *.json
 *.csv
