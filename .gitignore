@@ -1,5 +1,6 @@
 output/
 OUTPUTS/
+*.zip
 *.pdf
 *.json
 *.csv
