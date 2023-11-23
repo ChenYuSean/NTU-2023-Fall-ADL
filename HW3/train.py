@@ -64,27 +64,6 @@ ROOT_PATH = './'
 str_args = None
 
 # %%
-if FROM_COLAB:
-    from google.colab import drive
-    drive.mount('/content/drive')
-    ROOT_PATH = 'drive/MyDrive/Colab Notebooks/ADL/HW3/'
-if DEBUG:
-    import ipdb
-
-# %%
-# Comment out when using .py file
-str_args = [
-    "--train_file", ROOT_PATH + "data/train.json",
-    "--validation_file", ROOT_PATH + "data/public_test.json",
-    "--model_name_or_path", ROOT_PATH + "Taiwan-LLM-7B-v2.0-chat",
-    "--train_size", "1000",
-    "--max_step", "300",
-    "--checkpointing_steps", "50",
-    "--learning_rate", "2e-4",
-    "--output_dir", "output"
-]
-
-# %%
 # Parser
 def parse_args(str_args = None):
     parser = argparse.ArgumentParser()
@@ -469,6 +448,6 @@ def main(str_args = None):
 
 # %%
 if __name__ == "__main__":
-    main(str_args)
+    main()
 
 
