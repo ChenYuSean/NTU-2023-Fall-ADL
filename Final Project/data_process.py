@@ -15,7 +15,7 @@ import argparse
 
 
 # %%
-def read_json_files(path, max_file_num:int = None, shuffle = True):
+def read_json_files(path, max_file_num:int = None, max_sample_per_file: int = None, shuffle = True):
     json_files_content = {}
     content_list = []
     # Get the file names
@@ -33,12 +33,17 @@ def read_json_files(path, max_file_num:int = None, shuffle = True):
         file_num = file_num + 1
         with open(file, 'r', encoding='utf-8') as f:
             content = json.load(f)
+            if shuffle:
+                random.shuffle(content)
             # json_files_content[file] = content
             for record in content:
                 if type(record['votes']) == str:
                     if '萬' in record['votes']:
                         record['votes'] = int(record['votes'].replace('萬', '')) * 10000
-            content_list += content
+            if max_sample_per_file is not None:
+                content_list += content[:max_sample_per_file]
+            else:
+                content_list += content
         if max_file_num is not None and file_num >= max_file_num:
             break
     return content_list
@@ -75,7 +80,7 @@ ASSISTANT:"
 # %%
 if __name__ == '__main__':
     PATH = "./train_data/"
-    content = read_json_files(PATH, 300, True)
+    content = read_json_files(PATH, 1, None, True)
     print(content[:5])
     dataset = Dataset.from_list(content)
     print(dataset)
